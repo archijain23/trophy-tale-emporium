@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { CreditCard, Lock, Smartphone, Wallet } from "lucide-react";
+import { CreditCard, Lock, Smartphone, Wallet, Truck } from "lucide-react";
 
 interface PaymentInterfaceProps {
   total: number;
@@ -13,7 +13,7 @@ interface PaymentInterfaceProps {
 
 const PaymentInterface = ({ total, onPaymentSuccess }: PaymentInterfaceProps) => {
   const { toast } = useToast();
-  const [selectedMethod, setSelectedMethod] = useState<'card' | 'razorpay' | 'stripe'>('card');
+  const [selectedMethod, setSelectedMethod] = useState<'card' | 'razorpay' | 'stripe' | 'cod'>('card');
   const [cardData, setCardData] = useState({
     cardNumber: "",
     expiryDate: "",
@@ -82,6 +82,20 @@ const PaymentInterface = ({ total, onPaymentSuccess }: PaymentInterfaceProps) =>
     }, 1000);
   };
 
+  const handleCodOrder = () => {
+    setIsProcessing(true);
+    
+    // Simulate order processing for COD
+    setTimeout(() => {
+      toast({
+        title: "Order Placed Successfully!",
+        description: `Your order of $${total.toFixed(2)} has been placed. You can pay when the order is delivered.`,
+      });
+      setIsProcessing(false);
+      onPaymentSuccess();
+    }, 1500);
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-sm border p-6">
       <div className="flex items-center mb-6">
@@ -95,7 +109,7 @@ const PaymentInterface = ({ total, onPaymentSuccess }: PaymentInterfaceProps) =>
         <Label className="text-base font-medium text-gray-900 mb-3 block">
           Choose Payment Method
         </Label>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <button
             onClick={() => setSelectedMethod('card')}
             className={`p-4 border-2 rounded-lg transition-all ${
@@ -130,6 +144,18 @@ const PaymentInterface = ({ total, onPaymentSuccess }: PaymentInterfaceProps) =>
           >
             <Wallet className="h-6 w-6 mx-auto mb-2 text-primary" />
             <span className="text-sm font-medium">Stripe</span>
+          </button>
+          
+          <button
+            onClick={() => setSelectedMethod('cod')}
+            className={`p-4 border-2 rounded-lg transition-all ${
+              selectedMethod === 'cod'
+                ? 'border-primary bg-primary/5'
+                : 'border-gray-200 hover:border-gray-300'
+            }`}
+          >
+            <Truck className="h-6 w-6 mx-auto mb-2 text-primary" />
+            <span className="text-sm font-medium">Cash on Delivery</span>
           </button>
         </div>
       </div>
@@ -195,12 +221,37 @@ const PaymentInterface = ({ total, onPaymentSuccess }: PaymentInterfaceProps) =>
         </div>
       )}
 
+      {/* Cash on Delivery Information */}
+      {selectedMethod === 'cod' && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <div className="flex items-start">
+            <Truck className="h-5 w-5 text-amber-600 mr-3 mt-0.5" />
+            <div>
+              <h3 className="font-medium text-amber-800">Cash on Delivery</h3>
+              <p className="text-sm text-amber-700 mt-1">
+                Pay when your order is delivered to your doorstep. Our delivery executive will collect the payment.
+              </p>
+              <ul className="text-sm text-amber-700 mt-2 space-y-1">
+                <li>• Cash payment only</li>
+                <li>• Please keep exact change ready</li>
+                <li>• Additional COD charges may apply</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Payment Total */}
       <div className="mt-6 p-4 bg-gray-50 rounded-lg">
         <div className="flex justify-between items-center">
           <span className="text-lg font-semibold text-gray-900">Total Amount</span>
           <span className="text-2xl font-bold text-primary">${total.toFixed(2)}</span>
         </div>
+        {selectedMethod === 'cod' && (
+          <p className="text-sm text-gray-600 mt-1">
+            (Including COD charges if applicable)
+          </p>
+        )}
       </div>
 
       {/* Payment Button */}
@@ -234,10 +285,23 @@ const PaymentInterface = ({ total, onPaymentSuccess }: PaymentInterfaceProps) =>
             {isProcessing ? "Processing..." : `Pay with Stripe $${total.toFixed(2)}`}
           </Button>
         )}
+        
+        {selectedMethod === 'cod' && (
+          <Button 
+            onClick={handleCodOrder} 
+            className="w-full h-12 text-lg bg-amber-600 hover:bg-amber-700"
+            disabled={isProcessing}
+          >
+            {isProcessing ? "Placing Order..." : `Place Order - COD $${total.toFixed(2)}`}
+          </Button>
+        )}
       </div>
 
       <p className="text-xs text-gray-500 text-center mt-4">
-        Your payment information is secure and encrypted. We never store your card details.
+        {selectedMethod === 'cod' 
+          ? 'Your order will be confirmed and prepared for delivery.'
+          : 'Your payment information is secure and encrypted. We never store your card details.'
+        }
       </p>
     </div>
   );
