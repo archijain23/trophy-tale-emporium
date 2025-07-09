@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useCart } from "@/contexts/CartContext";
+import { useFavourites } from "@/contexts/FavouritesContext";
 import { useToast } from "@/hooks/use-toast";
 import { Star, Upload, ShoppingCart, Heart, ArrowLeft } from "lucide-react";
 
@@ -36,6 +37,7 @@ const ProductDetail = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
   const { addItem } = useCart();
+  const { addToFavourites, removeFromFavourites, isFavourite } = useFavourites();
   const { toast } = useToast();
   
   const [customization, setCustomization] = useState({
@@ -62,6 +64,22 @@ const ProductDetail = () => {
       title: "Added to Cart!",
       description: `${mockProduct.name} has been added to your cart.`,
     });
+  };
+
+  const handleToggleFavourite = () => {
+    if (isFavourite(mockProduct.id)) {
+      removeFromFavourites(mockProduct.id);
+      toast({
+        title: "Removed from Favourites",
+        description: `${mockProduct.name} has been removed from your favourites.`,
+      });
+    } else {
+      addToFavourites(mockProduct);
+      toast({
+        title: "Added to Favourites",
+        description: `${mockProduct.name} has been added to your favourites.`,
+      });
+    }
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -230,8 +248,8 @@ const ProductDetail = () => {
                   <ShoppingCart className="h-4 w-4 mr-2" />
                   Add to Cart
                 </Button>
-                <Button variant="outline">
-                  <Heart className="h-4 w-4" />
+                <Button variant="outline" onClick={handleToggleFavourite}>
+                  <Heart className={`h-4 w-4 ${isFavourite(mockProduct.id) ? 'text-red-500 fill-current' : ''}`} />
                 </Button>
               </div>
             </div>

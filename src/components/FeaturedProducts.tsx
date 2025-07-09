@@ -2,6 +2,8 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Star, Heart } from "lucide-react";
+import { useFavourites } from "@/contexts/FavouritesContext";
+import { useToast } from "@/hooks/use-toast";
 
 const featuredProducts = [
   {
@@ -43,6 +45,25 @@ const featuredProducts = [
 ];
 
 export const FeaturedProducts = () => {
+  const { addToFavourites, removeFromFavourites, isFavourite } = useFavourites();
+  const { toast } = useToast();
+
+  const handleToggleFavourite = (product: typeof featuredProducts[0]) => {
+    if (isFavourite(product.id)) {
+      removeFromFavourites(product.id);
+      toast({
+        title: "Removed from Favourites",
+        description: `${product.name} has been removed from your favourites.`,
+      });
+    } else {
+      addToFavourites(product);
+      toast({
+        title: "Added to Favourites",
+        description: `${product.name} has been added to your favourites.`,
+      });
+    }
+  };
+
   return (
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -73,8 +94,11 @@ export const FeaturedProducts = () => {
                     New
                   </span>
                 )}
-                <button className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors">
-                  <Heart className="h-4 w-4 text-gray-600" />
+                <button 
+                  onClick={() => handleToggleFavourite(product)}
+                  className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors"
+                >
+                  <Heart className={`h-4 w-4 ${isFavourite(product.id) ? 'text-red-500 fill-current' : 'text-gray-600'}`} />
                 </button>
               </div>
 
