@@ -1,8 +1,17 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ShoppingCart, User, Menu, X } from "lucide-react";
+import { ShoppingCart, User, Menu, X, Heart, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -15,6 +24,19 @@ export const Header = () => {
   const handleLogout = () => {
     logout();
     navigate('/');
+  };
+
+  const handleFavourites = () => {
+    navigate('/favourites');
+  };
+
+  const getUserInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
   };
 
   return (
@@ -46,11 +68,39 @@ export const Header = () => {
           <div className="flex items-center space-x-4">
             {/* User Menu */}
             {user ? (
-              <div className="hidden md:flex items-center space-x-2">
-                <span className="text-sm text-gray-600">Hi, {user.name}</span>
-                <Button variant="ghost" size="sm" onClick={handleLogout}>
-                  Logout
-                </Button>
+              <div className="hidden md:flex">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={user.avatar} alt={user.name} />
+                        <AvatarFallback className="bg-primary text-primary-foreground text-sm">
+                          {getUserInitials(user.name)}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">{user.name}</p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {user.email}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleFavourites} className="cursor-pointer">
+                      <Heart className="mr-2 h-4 w-4" />
+                      <span>Favourites</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Logout</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             ) : (
               <Link to="/login">
@@ -118,11 +168,39 @@ export const Header = () => {
                 Contact
               </Link>
               {user ? (
-                <div className="flex flex-col space-y-2">
-                  <span className="text-sm text-gray-600">Hi, {user.name}</span>
-                  <Button variant="ghost" size="sm" onClick={handleLogout} className="self-start">
+                <div className="flex flex-col space-y-2 pt-2 border-t border-gray-200">
+                  <div className="flex items-center space-x-3">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={user.avatar} alt={user.name} />
+                      <AvatarFallback className="bg-primary text-primary-foreground text-sm">
+                        {getUserInitials(user.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="text-sm font-medium">{user.name}</p>
+                      <p className="text-xs text-gray-500">{user.email}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      handleFavourites();
+                      setIsMenuOpen(false);
+                    }}
+                    className="flex items-center text-gray-700 hover:text-primary transition-colors"
+                  >
+                    <Heart className="h-4 w-4 mr-2" />
+                    Favourites
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsMenuOpen(false);
+                    }}
+                    className="flex items-center text-gray-700 hover:text-primary transition-colors"
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
                     Logout
-                  </Button>
+                  </button>
                 </div>
               ) : (
                 <Link
