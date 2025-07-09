@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { CreditCard, Lock } from "lucide-react";
+import PaymentInterface from "@/components/PaymentInterface";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -24,11 +24,7 @@ const Checkout = () => {
     address: "",
     city: "",
     state: "",
-    zipCode: "",
-    cardNumber: "",
-    expiryDate: "",
-    cvv: "",
-    nameOnCard: ""
+    zipCode: ""
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,15 +34,11 @@ const Checkout = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Mock payment processing
+  const handlePaymentSuccess = () => {
     toast({
       title: "Order Placed Successfully!",
       description: "Thank you for your order. You'll receive a confirmation email shortly.",
     });
-    
     clearCart();
     navigate("/");
   };
@@ -175,65 +167,11 @@ const Checkout = () => {
                 </div>
               </div>
 
-              {/* Payment Information */}
-              <div className="bg-white rounded-lg shadow-sm border p-6">
-                <div className="flex items-center mb-4">
-                  <CreditCard className="h-5 w-5 text-primary mr-2" />
-                  <h2 className="text-xl font-semibold text-gray-900">Payment Information</h2>
-                  <Lock className="h-4 w-4 text-gray-400 ml-2" />
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="nameOnCard">Name on Card *</Label>
-                    <Input
-                      id="nameOnCard"
-                      name="nameOnCard"
-                      required
-                      value={formData.nameOnCard}
-                      onChange={handleChange}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="cardNumber">Card Number *</Label>
-                    <Input
-                      id="cardNumber"
-                      name="cardNumber"
-                      required
-                      placeholder="1234 5678 9012 3456"
-                      value={formData.cardNumber}
-                      onChange={handleChange}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="expiryDate">Expiry Date *</Label>
-                      <Input
-                        id="expiryDate"
-                        name="expiryDate"
-                        required
-                        placeholder="MM/YY"
-                        value={formData.expiryDate}
-                        onChange={handleChange}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="cvv">CVV *</Label>
-                      <Input
-                        id="cvv"
-                        name="cvv"
-                        required
-                        placeholder="123"
-                        value={formData.cvv}
-                        onChange={handleChange}
-                        className="mt-1"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Payment Interface */}
+              <PaymentInterface 
+                total={total} 
+                onPaymentSuccess={handlePaymentSuccess}
+              />
             </div>
 
             {/* Order Summary */}
@@ -276,19 +214,13 @@ const Checkout = () => {
                 </div>
               </div>
               
-              <div className="flex justify-between mb-6">
+              <div className="flex justify-between mb-4">
                 <span className="text-lg font-semibold">Total</span>
                 <span className="text-lg font-bold text-primary">${total.toFixed(2)}</span>
               </div>
               
-              <form onSubmit={handleSubmit}>
-                <Button type="submit" className="w-full">
-                  Place Order
-                </Button>
-              </form>
-              
-              <p className="text-xs text-gray-500 text-center mt-4">
-                Your payment information is secure and encrypted.
+              <p className="text-xs text-gray-500 text-center">
+                Complete your payment information on the left to place your order.
               </p>
             </div>
           </div>
