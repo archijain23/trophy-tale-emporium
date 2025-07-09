@@ -3,6 +3,8 @@ import { useParams, Link } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Star, Heart } from "lucide-react";
+import { useFavourites } from "@/contexts/FavouritesContext";
+import { useToast } from "@/hooks/use-toast";
 
 const mockProducts = {
   trophies: [
@@ -38,6 +40,33 @@ const Category = () => {
   const { categoryId } = useParams();
   const products = mockProducts[categoryId as keyof typeof mockProducts] || [];
   const categoryName = categoryNames[categoryId as keyof typeof categoryNames] || "Category";
+  const { addToFavourites, removeFromFavourites, isFavourite } = useFavourites();
+  const { toast } = useToast();
+
+  const handleToggleFavourite = (product: typeof products[0]) => {
+    const favouriteItem = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      category: categoryName,
+      rating: product.rating,
+    };
+
+    if (isFavourite(product.id)) {
+      removeFromFavourites(product.id);
+      toast({
+        title: "Removed from Favourites",
+        description: `${product.name} has been removed from your favourites.`,
+      });
+    } else {
+      addToFavourites(favouriteItem);
+      toast({
+        title: "Added to Favourites",
+        description: `${product.name} has been added to your favourites.`,
+      });
+    }
+  };
 
   return (
     <Layout>
@@ -68,8 +97,11 @@ const Category = () => {
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <button className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors">
-                    <Heart className="h-4 w-4 text-gray-600" />
+                  <button 
+                    onClick={() => handleToggleFavourite(product)}
+                    className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors"
+                  >
+                    <Heart className={`h-4 w-4 ${isFavourite(product.id) ? 'text-red-500 fill-current' : 'text-gray-600'}`} />
                   </button>
                 </div>
 
