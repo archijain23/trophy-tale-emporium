@@ -14,6 +14,8 @@ import MyOrders from "@/pages/MyOrders";
 import NotFound from "@/pages/NotFound";
 import Shop from "@/pages/Shop";
 import ProductDetail from "@/pages/ProductDetail";
+import Admin from "@/pages/Admin";
+import Favourites from "@/pages/Favourites";
 
 function App() {
   console.log("App component is rendering");
@@ -30,6 +32,8 @@ function App() {
                 <Route path="/shop" element={<Layout><Shop /></Layout>} />
                 <Route path="/product/:productId" element={<Layout><ProductDetail /></Layout>} />
                 <Route path="/my-orders" element={<Layout><MyOrders /></Layout>} />
+                <Route path="/admin" element={<Layout><Admin /></Layout>} />
+                <Route path="/favourites" element={<Layout><Favourites /></Layout>} />
                 <Route path="*" element={<Layout><NotFound /></Layout>} />
               </Routes>
               <Toaster />

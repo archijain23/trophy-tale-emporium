@@ -1,5 +1,4 @@
 
-import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -60,59 +59,57 @@ const getStatusColor = (status) => {
 
 export default function MyOrders() {
   return (
-    <Layout>
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8">My Orders</h1>
-          
-          <div className="space-y-6">
-            {mockOrders.map((order) => (
-              <Card key={order.id}>
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-lg">Order #{order.id}</CardTitle>
-                      <p className="text-sm text-muted-foreground">
-                        Placed on {new Date(order.date).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-lg font-semibold">${order.total}</p>
-                      <Badge className={getStatusColor(order.status)}>
-                        <div className="flex items-center gap-1">
-                          {getStatusIcon(order.status)}
-                          {order.status}
-                        </div>
-                      </Badge>
-                    </div>
+    <div className="container mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold mb-8">My Orders</h1>
+        
+        <div className="space-y-6">
+          {mockOrders.map((order) => (
+            <Card key={order.id}>
+              <CardHeader>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <CardTitle className="text-lg">Order #{order.id}</CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                      Placed on {new Date(order.date).toLocaleDateString()}
+                    </p>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {order.items.map((item) => (
-                      <div key={item.id} className="flex justify-between items-center py-2 border-b last:border-b-0">
-                        <div>
-                          <p className="font-medium">{item.name}</p>
-                          <p className="text-sm text-muted-foreground">Quantity: {item.quantity}</p>
-                        </div>
-                        <p className="font-medium">${item.price}</p>
+                  <div className="text-right">
+                    <p className="text-lg font-semibold">${order.total}</p>
+                    <Badge className={getStatusColor(order.status)}>
+                      <div className="flex items-center gap-1">
+                        {getStatusIcon(order.status)}
+                        {order.status}
                       </div>
-                    ))}
+                    </Badge>
                   </div>
-                  <div className="flex gap-2 mt-4">
-                    <Link to={`/order/${order.id}`}>
-                      <Button variant="outline" size="sm">
-                        <Eye className="h-4 w-4 mr-2" />
-                        View Details
-                      </Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {order.items.map((item) => (
+                    <div key={item.id} className="flex justify-between items-center py-2 border-b last:border-b-0">
+                      <div>
+                        <p className="font-medium">{item.name}</p>
+                        <p className="text-sm text-muted-foreground">Quantity: {item.quantity}</p>
+                      </div>
+                      <p className="font-medium">${item.price}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex gap-2 mt-4">
+                  <Link to={`/order/${order.id}`}>
+                    <Button variant="outline" size="sm">
+                      <Eye className="h-4 w-4 mr-2" />
+                      View Details
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
-    </Layout>
+    </div>
   );
 }
