@@ -38,7 +38,7 @@ const mockOrders = [
   }
 ];
 
-const getStatusIcon = (status: string) => {
+const getStatusIcon = (status) => {
   switch (status) {
     case 'delivered': return <CheckCircle className="h-4 w-4 text-green-600" />;
     case 'shipped': return <Package className="h-4 w-4 text-blue-600" />;
@@ -48,7 +48,7 @@ const getStatusIcon = (status: string) => {
   }
 };
 
-const getStatusColor = (status: string) => {
+const getStatusColor = (status) => {
   switch (status) {
     case 'delivered': return 'bg-green-100 text-green-800';
     case 'shipped': return 'bg-blue-100 text-blue-800';

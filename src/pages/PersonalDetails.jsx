@@ -28,14 +28,14 @@ export default function PersonalDetails() {
     bio: ""
   });
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
 
-  const handleAddressChange = (field: string, value: string) => {
+  const handleAddressChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
       address: {
@@ -45,7 +45,7 @@ export default function PersonalDetails() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     // In a real app, this would make an API call to update user details
     toast({

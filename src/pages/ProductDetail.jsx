@@ -44,7 +44,7 @@ const ProductDetail = () => {
     text: "",
     color: "Gold",
     size: "Medium (8\")",
-    uploadedImage: null as File | null,
+    uploadedImage: null,
   });
 
   const handleAddToCart = () => {
@@ -82,7 +82,7 @@ const ProductDetail = () => {
     }
   };
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (event) => {
     const file = event.target.files?.[0];
     if (file) {
       setCustomization({ ...customization, uploadedImage: file });
