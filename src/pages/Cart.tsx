@@ -12,11 +12,14 @@ const Cart = () => {
   const { addToFavourites } = useFavourites();
   const { toast } = useToast();
 
-  const handleRemoveFromCart = (itemId: string, itemName: string) => {
-    removeItem(itemId);
+  const getItemKey = (item: any) => `${item.id}-${JSON.stringify(item.customization)}`;
+
+  const handleRemoveFromCart = (item: any) => {
+    const itemKey = getItemKey(item);
+    removeItem(itemKey);
     toast({
       title: "Removed from Cart",
-      description: `${itemName} has been removed from your cart.`,
+      description: `${item.name} has been removed from your cart.`,
     });
   };
 
@@ -31,7 +34,8 @@ const Cart = () => {
     };
     
     addToFavourites(favouriteItem);
-    removeItem(`${item.id}-${JSON.stringify(item.customization)}`);
+    const itemKey = getItemKey(item);
+    removeItem(itemKey);
     
     toast({
       title: "Moved to Wishlist",
@@ -68,7 +72,7 @@ const Cart = () => {
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
               {items.map((item) => (
-                <div key={`${item.id}-${JSON.stringify(item.customization)}`} className="bg-white rounded-lg shadow-sm border p-6">
+                <div key={getItemKey(item)} className="bg-white rounded-lg shadow-sm border p-6">
                   <div className="flex gap-4">
                     <img
                       src={item.image}
@@ -107,7 +111,7 @@ const Cart = () => {
                           <Heart className="h-4 w-4" />
                         </button>
                         <button
-                          onClick={() => handleRemoveFromCart(`${item.id}-${JSON.stringify(item.customization)}`, item.name)}
+                          onClick={() => handleRemoveFromCart(item)}
                           className="text-red-500 hover:text-red-700 p-1 transition-colors"
                           title="Remove from Cart"
                         >
@@ -118,14 +122,14 @@ const Cart = () => {
                       {/* Quantity Controls */}
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => updateQuantity(`${item.id}-${JSON.stringify(item.customization)}`, item.quantity - 1)}
+                          onClick={() => updateQuantity(getItemKey(item), item.quantity - 1)}
                           className="p-1 rounded-md border border-gray-300 hover:bg-gray-50"
                         >
                           <Minus className="h-4 w-4" />
                         </button>
                         <span className="w-8 text-center">{item.quantity}</span>
                         <button
-                          onClick={() => updateQuantity(`${item.id}-${JSON.stringify(item.customization)}`, item.quantity + 1)}
+                          onClick={() => updateQuantity(getItemKey(item), item.quantity + 1)}
                           className="p-1 rounded-md border border-gray-300 hover:bg-gray-50"
                         >
                           <Plus className="h-4 w-4" />
