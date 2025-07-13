@@ -3,10 +3,41 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
-import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { useFavourites } from "@/contexts/FavouritesContext";
+import { Minus, Plus, Trash2, ShoppingBag, Heart } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const Cart = () => {
   const { items, updateQuantity, removeItem, getTotalPrice, getTotalItems } = useCart();
+  const { addToFavourites } = useFavourites();
+  const { toast } = useToast();
+
+  const handleRemoveFromCart = (itemId: string, itemName: string) => {
+    removeItem(itemId);
+    toast({
+      title: "Removed from Cart",
+      description: `${itemName} has been removed from your cart.`,
+    });
+  };
+
+  const handleMoveToWishlist = (item: any) => {
+    const favouriteItem = {
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      image: item.image,
+      category: "Product",
+      rating: 4.5,
+    };
+    
+    addToFavourites(favouriteItem);
+    removeItem(`${item.id}-${JSON.stringify(item.customization)}`);
+    
+    toast({
+      title: "Moved to Wishlist",
+      description: `${item.name} has been moved to your wishlist.`,
+    });
+  };
 
   if (items.length === 0) {
     return (
@@ -66,13 +97,25 @@ const Cart = () => {
                     </div>
                     
                     <div className="flex flex-col items-end gap-2">
-                      <button
-                        onClick={() => removeItem(`${item.id}-${JSON.stringify(item.customization)}`)}
-                        className="text-red-500 hover:text-red-700 p-1"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                      {/* Action Buttons */}
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleMoveToWishlist(item)}
+                          className="text-pink-500 hover:text-pink-700 p-1 transition-colors"
+                          title="Move to Wishlist"
+                        >
+                          <Heart className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleRemoveFromCart(`${item.id}-${JSON.stringify(item.customization)}`, item.name)}
+                          className="text-red-500 hover:text-red-700 p-1 transition-colors"
+                          title="Remove from Cart"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
                       
+                      {/* Quantity Controls */}
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => updateQuantity(`${item.id}-${JSON.stringify(item.customization)}`, item.quantity - 1)}
