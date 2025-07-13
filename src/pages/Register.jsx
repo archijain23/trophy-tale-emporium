@@ -17,39 +17,37 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
     email: "",
     password: "",
     confirmPassword: ""
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: "Password Mismatch",
-        description: "Please make sure your passwords match.",
+        description: "Passwords do not match. Please try again.",
         variant: "destructive",
       });
       return;
     }
 
-    const fullName = `${formData.firstName} ${formData.lastName}`;
-    const success = await register(formData.email, formData.password, fullName);
+    const success = await register(formData.email, formData.password, formData.name);
     
     if (success) {
       toast({
-        title: "Account Created!",
-        description: "Welcome to Trophy Tale! Your account has been created successfully.",
+        title: "Welcome to Trophy Tale!",
+        description: "Your account has been created successfully.",
       });
       navigate("/");
     } else {
@@ -68,35 +66,22 @@ const Register = () => {
           <div className="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-8">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
-              <p className="text-gray-600">Join Trophy Tale and start customizing</p>
+              <p className="text-gray-600">Join Trophy Tale and start creating custom items</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="firstName">First Name</Label>
-                  <Input
-                    id="firstName"
-                    name="firstName"
-                    required
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    className="mt-1"
-                    placeholder="First name"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input
-                    id="lastName"
-                    name="lastName"
-                    required
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    className="mt-1"
-                    placeholder="Last name"
-                  />
-                </div>
+              <div>
+                <Label htmlFor="name">Full Name</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="mt-1"
+                  placeholder="Enter your full name"
+                />
               </div>
 
               <div>
