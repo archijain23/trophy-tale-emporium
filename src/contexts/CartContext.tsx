@@ -17,8 +17,8 @@ export interface CartItem {
 interface CartContextType {
   items: CartItem[];
   addItem: (item: Omit<CartItem, 'quantity'>) => void;
-  removeItem: (id: string) => void;
-  updateQuantity: (id: string, quantity: number) => void;
+  removeItem: (itemKey: string) => void;
+  updateQuantity: (itemKey: string, quantity: number) => void;
   clearCart: () => void;
   getTotalPrice: () => number;
   getTotalItems: () => number;
@@ -42,12 +42,12 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem('cart', JSON.stringify(items));
   }, [items]);
 
+  const getItemKey = (item: CartItem) => `${item.id}-${JSON.stringify(item.customization)}`;
+
   const addItem = (newItem: Omit<CartItem, 'quantity'>) => {
     setItems(prev => {
-      const existingItemIndex = prev.findIndex(item => 
-        item.id === newItem.id && 
-        JSON.stringify(item.customization) === JSON.stringify(newItem.customization)
-      );
+      const newItemKey = getItemKey({ ...newItem, quantity: 1 });
+      const existingItemIndex = prev.findIndex(item => getItemKey(item) === newItemKey);
       
       if (existingItemIndex >= 0) {
         const updated = [...prev];
@@ -59,17 +59,17 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const removeItem = (id: string) => {
-    setItems(prev => prev.filter(item => item.id !== id));
+  const removeItem = (itemKey: string) => {
+    setItems(prev => prev.filter(item => getItemKey(item) !== itemKey));
   };
 
-  const updateQuantity = (id: string, quantity: number) => {
+  const updateQuantity = (itemKey: string, quantity: number) => {
     if (quantity <= 0) {
-      removeItem(id);
+      removeItem(itemKey);
       return;
     }
     setItems(prev => prev.map(item => 
-      item.id === id ? { ...item, quantity } : item
+      getItemKey(item) === itemKey ? { ...item, quantity } : item
     ));
   };
 
