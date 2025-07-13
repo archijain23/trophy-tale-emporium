@@ -5,16 +5,16 @@ import { Menu, X, ShoppingCart, User, Heart, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
+import { useFavourites } from "@/contexts/FavouritesContext";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { user, logout } = useAuth();
+  const { getTotalItems } = useCart();
+  const { getTotalFavourites } = useFavourites();
   const navigate = useNavigate();
-
-  // Mock cart and favourites functions since contexts might be missing
-  const getTotalItems = () => 0;
-  const getTotalFavourites = () => 0;
 
   const handleLogout = () => {
     logout();
