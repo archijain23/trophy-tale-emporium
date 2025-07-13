@@ -7,6 +7,8 @@ import { WhyChooseUs } from "@/components/WhyChooseUs";
 import { HappyCustomers } from "@/components/HappyCustomers";
 
 const Index = () => {
+  console.log("Index component is rendering");
+  
   return (
     <div className="min-h-screen">
       <Hero />

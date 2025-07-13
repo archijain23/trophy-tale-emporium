@@ -16,6 +16,8 @@ import Shop from "@/pages/Shop";
 import ProductDetail from "@/pages/ProductDetail";
 
 function App() {
+  console.log("App component is rendering");
+  
   return (
     <AuthProvider>
       <CartProvider>
