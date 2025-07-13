@@ -6,14 +6,9 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { CreditCard, Lock, Smartphone, Wallet, Truck } from "lucide-react";
 
-interface PaymentInterfaceProps {
-  total: number;
-  onPaymentSuccess: () => void;
-}
-
-const PaymentInterface = ({ total, onPaymentSuccess }: PaymentInterfaceProps) => {
+const PaymentInterface = ({ total, onPaymentSuccess }) => {
   const { toast } = useToast();
-  const [selectedMethod, setSelectedMethod] = useState<'card' | 'razorpay' | 'stripe' | 'cod'>('card');
+  const [selectedMethod, setSelectedMethod] = useState('card');
   const [cardData, setCardData] = useState({
     cardNumber: "",
     expiryDate: "",
@@ -22,7 +17,7 @@ const PaymentInterface = ({ total, onPaymentSuccess }: PaymentInterfaceProps) =>
   });
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleCardChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCardChange = (e) => {
     const { name, value } = e.target;
     let formattedValue = value;
 
