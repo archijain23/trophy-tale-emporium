@@ -19,6 +19,11 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Admin from "./pages/Admin";
 import Favourites from "./pages/Favourites";
+import MyOrders from "./pages/MyOrders";
+import OrderDetail from "./pages/OrderDetail";
+import PersonalDetails from "./pages/PersonalDetails";
+import TermsConditions from "./pages/TermsConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -45,6 +50,11 @@ const App = () => (
                 <Route path="/register" element={<Register />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/favourites" element={<Favourites />} />
+                <Route path="/my-orders" element={<MyOrders />} />
+                <Route path="/order/:orderId" element={<OrderDetail />} />
+                <Route path="/personal-details" element={<PersonalDetails />} />
+                <Route path="/terms-conditions" element={<TermsConditions />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

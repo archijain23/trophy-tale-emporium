@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ShoppingCart, User, Menu, X, Heart, LogOut } from "lucide-react";
+import { ShoppingCart, User, Menu, X, Heart, LogOut, Package, FileText, Shield, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -28,6 +28,14 @@ export const Header = () => {
 
   const handleFavourites = () => {
     navigate('/favourites');
+  };
+
+  const handleMyOrders = () => {
+    navigate('/my-orders');
+  };
+
+  const handlePersonalDetails = () => {
+    navigate('/personal-details');
   };
 
   const getUserInitials = (name: string) => {
@@ -89,9 +97,30 @@ export const Header = () => {
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleMyOrders} className="cursor-pointer">
+                      <Package className="mr-2 h-4 w-4" />
+                      <span>My Orders</span>
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleFavourites} className="cursor-pointer">
                       <Heart className="mr-2 h-4 w-4" />
                       <span>Favourites</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handlePersonalDetails} className="cursor-pointer">
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>Personal Details</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link to="/terms-conditions" className="cursor-pointer">
+                        <FileText className="mr-2 h-4 w-4" />
+                        <span>Terms & Conditions</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/privacy-policy" className="cursor-pointer">
+                        <Shield className="mr-2 h-4 w-4" />
+                        <span>Privacy Policy</span>
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
@@ -181,6 +210,16 @@ export const Header = () => {
                   </div>
                   <button
                     onClick={() => {
+                      handleMyOrders();
+                      setIsMenuOpen(false);
+                    }}
+                    className="flex items-center text-gray-700 hover:text-primary transition-colors"
+                  >
+                    <Package className="h-4 w-4 mr-2" />
+                    My Orders
+                  </button>
+                  <button
+                    onClick={() => {
                       handleFavourites();
                       setIsMenuOpen(false);
                     }}
@@ -189,6 +228,32 @@ export const Header = () => {
                     <Heart className="h-4 w-4 mr-2" />
                     Favourites
                   </button>
+                  <button
+                    onClick={() => {
+                      handlePersonalDetails();
+                      setIsMenuOpen(false);
+                    }}
+                    className="flex items-center text-gray-700 hover:text-primary transition-colors"
+                  >
+                    <Settings className="h-4 w-4 mr-2" />
+                    Personal Details
+                  </button>
+                  <Link
+                    to="/terms-conditions"
+                    className="flex items-center text-gray-700 hover:text-primary transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <FileText className="h-4 w-4 mr-2" />
+                    Terms & Conditions
+                  </Link>
+                  <Link
+                    to="/privacy-policy"
+                    className="flex items-center text-gray-700 hover:text-primary transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Shield className="h-4 w-4 mr-2" />
+                    Privacy Policy
+                  </Link>
                   <button
                     onClick={() => {
                       handleLogout();
